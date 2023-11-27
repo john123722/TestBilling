@@ -1,0 +1,101 @@
+﻿@model FormPractise.Models.CombinedViewModel
+@using System.Globalization
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+    function saveAsPdf() {
+        const content = document.getElementById('save');
+
+        // Configure the options for PDF generation
+        const options = {
+            filename: 'report.pdf',
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        };
+
+        // Generate the PDF
+        html2pdf().set(options).from(content).save();
+    }
+    function printView() {
+        window.print();
+    }
+
+</script>
+
+<div id="save">
+    <div>
+        @if (Model.PatientList != null)
+        {
+            var selectedPatient = Model.PatientList.FirstOrDefault(p => p.Id == Model.SelectedPatientId);
+            if (selectedPatient != null)
+            {
+                <div>
+                    <hr />
+                    <dl class="dl-horizontal">
+                        <dd>
+                            Name:
+                            @selectedPatient.FirstName @selectedPatient.LastName
+                            <div style="padding-left: 70%">
+                                Referal:
+                                @selectedPatient.Referal
+                            </div>
+                            Created Date:
+                            @selectedPatient.CreatedDate
+                        </dd>
+                    </dl>
+                </div>
+            }
+            else
+            {
+                <p>No patient found with the specified ID.</p>
+            }
+        }
+        else
+        {
+            <p>Patient details not available.</p>
+        }
+    </div>
+
+    <h2>Test Details</h2>
+    @if (Model.TestList != null && Model.TestList.Any())
+    {
+        <table class="table"  border-collapse: collapse;">
+            <tr>
+                <th style="border: none;">Id</th>
+                <th style="border: none;">Test Name</th>
+                <th style="border: none;">Group Name</th>
+                <th style="border: none;">Price</th>
+            </tr>
+            @foreach (var test in Model.TestList)
+            {
+                <tr>
+                    <td style="border: none;">@test.TId</td>
+                    <td style="border: none;">@test.TestName</td>
+                    <td style="border: none;">@test.GroupName</td>
+                    <td style="border: none;">@test.Price</td>
+                </tr>
+            }
+            <tr>
+                <td style="border: none;"></td>
+                <td style="border: none;"></td>
+                <td style="border: none;">Total Price:</td>
+                <td style="border: none;">Rs. @Model.TestList.Sum(t => Convert.ToDecimal(t.Price)).ToString()</td>
+            </tr>
+        </table>
+
+
+
+
+    }
+    else
+    {
+        <p>No test details available.</p>
+    }
+
+</div>
+<div>
+    <button id="printBtn" onclick="printView()">Print</button>
+    <button id="saveBtn" onclick="saveAsPdf()">Save as PDF</button>
+
+</div>

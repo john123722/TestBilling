@@ -1,0 +1,73 @@
+﻿@model IEnumerable<FormPractise.Models.PatientReportModel>
+@{
+    ViewBag.Title = "Display";
+}
+<h2>Patient Details</h2>
+
+<p>
+    @ViewBag.ErrorMessage<br /><br />
+    <style>
+        .btn-orange {
+            background-color: #f5ecb0;
+        }
+
+            .btn-orange a:hover {
+                color: #ab03a0;
+            }
+    </style>
+</p>
+@{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TestName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contact)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TestName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+
+
+            </tr>
+        }
+
+    </table>
+}
+
+

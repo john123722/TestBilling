@@ -1,0 +1,117 @@
+﻿@model IEnumerable<FormPractise.Models.PatientModel>
+
+@{
+    ViewBag.Title = "Display";
+}
+<h2>Patient Details</h2>
+
+<p>
+    @ViewBag.ErrorMessage<br /><br />
+    <style>
+        .btn-orange {
+            background-color: #f5ecb0;
+        }
+
+            .btn-orange a:hover {
+                color: #ab03a0;
+            }
+    </style>
+
+    <button type="button" class="btn btn-orange">
+        @Html.ActionLink("Create New Record", "AddNewPatient", "Home", null, new { @class = "btn-link" })
+    </button>
+
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Contact)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Gender)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateOfBirth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Referal)
+        </th>
+        <th></th>
+    </tr>
+    
+    @foreach (var item in Model)
+    {
+
+        <tr>
+            <td>
+                <style>
+     
+                    tr td {
+                        font-size: 12px;
+                        text-align:center;
+                    }
+                </style>
+
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOfBirth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Referal)
+            </td>
+            <td>
+                <style>
+                    .btn-small {
+                        padding: 0.15rem 0.25rem;
+                        font-size: 0.7rem;
+                    }
+                </style>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-sm btn-small" })
+                @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-success btn-sm btn-small " })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm btn-small" })
+                @Html.ActionLink("Add Test", "Display", "PatientAddTest", new { id = item.Id }, new { @class = "btn btn-secondary btn-sm btn-small" })
+            </td>
+        </tr>
+    }
+
+</table>

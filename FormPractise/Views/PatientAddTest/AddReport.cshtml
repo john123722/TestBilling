@@ -1,0 +1,58 @@
+﻿@model FormPractise.Models.CombinedViewModel
+
+
+@{
+    var selectedPatient = Model.PatientList.FirstOrDefault(p => p.Id == Model.SelectedPatientId);
+    if (selectedPatient != null)
+    {
+        <div>
+            <hr />
+            <dl class="dl-horizontal">
+                <dd>
+                    Name:
+                    @selectedPatient.FirstName @selectedPatient.LastName
+                    <div style="padding-left: 70%">
+                        Referal:
+                        @selectedPatient.Referal
+                    </div>
+                    Created Date:
+                    @selectedPatient.CreatedDate
+                </dd>
+            </dl>
+        </div>
+    }
+    else
+    {
+        <p>No patient found with the specified ID.</p>
+    }
+}
+<h2>Test Details</h2>
+@if (Model.TestList != null && Model.TestList.Any())
+{
+    <table class="table">
+        <tr>
+            <th>Id</th>
+            <th>Test Name</th>
+            <th>Group Name</th>
+            <th>Price</th>
+        </tr>
+        @foreach (var test in Model.TestList)
+        {
+            <tr>
+                <td>@test.TId</td>
+                <td>@test.TestName</td>
+                <td>@test.GroupName</td>
+                <td>@test.Price</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No test details available.</p>
+}
+
+
+
+
+

@@ -1,0 +1,24 @@
+﻿@model FormPractise.Models.PatientModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+<h1>@ViewBag.Message</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <a href="http://localhost:64269/Home/Display"><input type="submit" value="Delete" class="btn btn-danger" /></a>
+            @Html.ActionLink("Back to List", "Display")
+        </div>
+
+      
+
+    }
+</div>

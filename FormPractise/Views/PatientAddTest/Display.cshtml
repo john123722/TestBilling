@@ -1,0 +1,193 @@
+﻿@model FormPractise.Models.CombinedViewModel
+
+<style>
+    .selected-test-container {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        background-color: lightgray;
+        padding: 10px;
+    }
+
+    .test-list-container {
+        float: left;
+        width: 60%;
+        padding-right: 20px;
+    }
+
+    .test-details-container {
+        float: left;
+        width: 40%;
+    }
+
+    .test-details {
+        float: left;
+        margin-right: 20px;
+    }
+
+    .total-price {
+        clear: both;
+        margin-top: 20px;
+        margin-left: 60%;
+    }
+</style>
+
+<h2>Selected Details</h2>
+@{
+    var selectedPatient = Model.PatientList.FirstOrDefault(p => p.Id == Model.SelectedPatientId);
+    if (selectedPatient != null)
+    {
+        <div>
+            <hr />
+            <dl class="dl-horizontal">
+                <dd>
+                    Name:
+                    @selectedPatient.FirstName @selectedPatient.LastName
+                    <div style="padding-left: 70%">
+                        Referal:
+                        @selectedPatient.Referal
+                    </div>
+                    Created Date:
+                    @selectedPatient.CreatedDate
+                </dd>
+            </dl>
+        </div>
+    }
+    else
+    {
+        <p>No patient found with the specified ID.</p>
+    }
+}
+
+<h2>Tests Available</h2>
+
+<div class="test-list-container">
+    @if (Model.TestList.Any())
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Test Name
+                </th>
+                <th>
+                    Group Name
+                </th>
+                <th>
+                    Price
+                </th>
+            </tr>
+
+            @foreach (var test in Model.TestList)
+            {
+                <tr>
+                    <td>
+                        @test.TId
+                    </td>
+                    <td>
+                        <a href="#" class="test-name" data-testid="@test.TId" data-testname="@test.TestName" data-price="@test.Price">@test.TestName</a>
+                    </td>
+                    <td>
+                        @test.GroupName
+                    </td>
+                    <td>
+                        @test.Price
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>No test details available.</p>
+    }
+</div>
+
+<div class="test-details-container">
+    <h3>Test Details</h3>
+    <div id="selected-test-list"></div>
+</div>
+
+<div id="total-price" class="total-price">
+    <h3>Total Price: <span id="price-value"></span></h3>
+    <div style="float: right; margin-top: -40px; margin-right: 20px;">
+
+        <button type="submit" class="btn btn-primary" onclick="AddReport()">Submit</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var selectedTests = [];
+        var totalSelectedPrice = 0;
+
+        $('.test-name').click(function () {
+            var testId = $(this).data('testid');
+            var testName = $(this).data('testname');
+            var testPrice = parseFloat($(this).data('price'));
+
+            var testIndex = selectedTests.findIndex(function (test) {
+                return test.testId === testId;
+            });
+
+            if (testIndex === -1) {
+                selectedTests.push({ testId: testId, testName: testName, testPrice: testPrice });
+                totalSelectedPrice += testPrice;
+            } else {
+                selectedTests.splice(testIndex, 1);
+                totalSelectedPrice -= testPrice;
+            }
+
+            updateSelectedTestList();
+            updateTotalPrice();
+        });
+
+        function updateSelectedTestList() {
+            var testListHtml = '';
+
+            selectedTests.forEach(function (test, index) {
+                var testNumber = index + 1;
+                testListHtml += '<div>' + testNumber + '. ' + test.testName + '</div>';
+            });
+
+            $('#selected-test-list').html(testListHtml);
+        }
+
+        function updateTotalPrice() {
+            $('#price-value').text(totalSelectedPrice.toFixed(2));
+        }
+
+        function AddReport() {
+            var patientId = '@Model.SelectedPatientId'; // Replace with the actual patient ID value
+
+            var testIds = selectedTests.map(function(test) {
+                return test.testId;
+            });
+
+            $.ajax({
+                url: '/PatientAddTest/AddReport/',
+                type: 'POST',
+                data: { patientId: patientId, testIds: testIds }, // Pass patientId as a string and testIds as an array
+                traditional: true, // Set traditional to true to allow passing arrays as parameters
+                success: function (result) {
+                    // Redirect to the details page after all tests are added
+                    window.location.href = '/PatientAddTest/DisplayIndividualReport/' + patientId + '?testIds=' + encodeURIComponent(JSON.stringify(testIds));
+
+                    //window.location.href = '/PatientAddTest/DisplayIndividualReport/' + patientId + '?testIds=' + testIds.join(',');
+                    //window.location.href = '/Home/Details/' + patientId;
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error, if needed
+                }
+            });
+        }
+
+
+        // Expose the AddReport function globally
+        window.AddReport = AddReport;
+    });
+</script>
+
